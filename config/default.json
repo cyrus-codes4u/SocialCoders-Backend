@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://cyrus123:Im1BadBitch.@devconnector.lmhxm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://cyrus123:Im1BadBitch.@devconnector.lmhxm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "jwtSecret": "myJWTSecretToken"
 }
