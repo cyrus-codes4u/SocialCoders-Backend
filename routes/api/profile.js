@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 
-// @route  GET api/profiles
+// @route  GET api/profile
 // @desc   Test Route
 // @access Publis
-router.get('/', (req, res) => res.send('Profiles router response'))
+router.get('/', (req, res) => res.send('Profile router response'))
 
 module.exports = router
