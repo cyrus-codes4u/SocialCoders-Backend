@@ -104,6 +104,10 @@ const ProfileSchema = new mongoose.Schema({
       type: String,
     },
   },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 })
 
-module.exports = User = mongoose.model('profile', ProfileSchema)
+module.exports = Profile = mongoose.model('profile', ProfileSchema)
