@@ -116,6 +116,23 @@ router('/')
       res.status(500).send('Server error')
     }
   })
+  // @route  DELETE api/profile
+  // @desc   Delete profile, user and posts
+  // @access Private
+  .delete(auth, async (req, res) => {
+    try {
+      //Remove profile
+      await Profile.findOneAndRemove({ user: req.user.id })
+      // Remove User
+      await user.findOneAndRemove({ _id: req.user.id })
+
+      res.status(204).json({ msg: 'User deleted' })
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send('Server error')
+    }
+  })
+
 // @route  GET api/profile/user/:user_id
 // @desc   Get profile by user id
 // @access Public
@@ -125,13 +142,13 @@ router('/user/:user_id').get(async (req, res) => {
       user: req.params.user_id,
     }).populate('user', ['name', 'avatar'])
     if (!profile) {
-      res.status(401).json({ msg: 'No profile for this user' })
+      res.status(401).json({ msg: 'No profile found' })
     }
     res.status(200).json(profile)
   } catch (err) {
     console.error(err.message)
     if (err.kind === 'ObjectId') {
-      res.status(401).json({ msg: 'No profile for this user' })
+      res.status(401).json({ msg: 'No profile found' })
     }
     res.status(500).send('Server error')
   }
