@@ -154,4 +154,50 @@ router('/user/:user_id').get(async (req, res) => {
   }
 })
 
+// @route  PUT api/profile/experience
+// @desc   Add profile experience
+// @access Private
+router('/experience').put(auth, async (req, res) => {})
+
+// @route  PUT api/profile/education
+// @desc   Add profile education
+// @access Private
+router('/education').put(
+  [
+    auth,
+    [
+      check('title').not().isEmpty(),
+      check('company').not().isEmpty(),
+      check('from').not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+    const { from, to, current, company, location, description, title } =
+      req.body
+
+    const newExperience = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description,
+    }
+    try {
+      const profile = Profile.findOne({ user: req.user.id })
+      profile.experience.unshift(newExperience)
+      await profile.save()
+      res.status(201).json(profile)
+    } catch (err) {
+      console.error(err.message)
+      res.status(500).send('Server error')
+    }
+  }
+)
+
 module.exports = router
