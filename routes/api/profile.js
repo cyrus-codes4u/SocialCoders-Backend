@@ -166,9 +166,10 @@ router('/education').put(
   [
     auth,
     [
-      check('title').not().isEmpty(),
-      check('company').not().isEmpty(),
+      check('school').not().isEmpty(),
+      check('degree').not().isEmpty(),
       check('from').not().isEmpty(),
+      check('fieldofstudy').not().isEmpty(),
     ],
   ],
   async (req, res) => {
@@ -176,21 +177,21 @@ router('/education').put(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
-    const { from, to, current, company, location, description, title } =
+    const { from, to, school, fieldofstudy, degree, description, current } =
       req.body
 
-    const newExperience = {
-      title,
-      company,
-      location,
+    const newEducation = {
       from,
       to,
-      current,
+      school,
+      fieldofstudy,
+      degree,
       description,
+      current,
     }
     try {
       const profile = Profile.findOne({ user: req.user.id })
-      profile.experience.unshift(newExperience)
+      profile.education.unshift(newEducation)
       await profile.save()
       res.status(201).json(profile)
     } catch (err) {
