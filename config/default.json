@@ -1,4 +1,6 @@
 {
     "mongoURI": "mongodb+srv://cyrus123:Im1BadBitch.@devconnector.lmhxm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    "jwtSecret": "myJWTSecretToken"
+    "jwtSecret": "myJWTSecretToken",
+    "githubClientId": "53435ee10917ffabebc8",
+    "gihubSecret": "72157f87094cf56cf462677faf0cde7b90b0f5f1"
 }
