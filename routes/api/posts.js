@@ -146,4 +146,66 @@ router('/likes/:post_id').put(auth, async (req, res) => {
   }
 })
 
+// @route  post api/posts/comment/:post_id/
+// @desc   Create comment on a post
+// @access Private
+
+router('/comment/:post_id').post(auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password')
+    const post = await Post.findById(req.params.post_id)
+
+    const newComment = {
+      text: req.body.text,
+      user: req.user.id,
+      name: user.name,
+      avatar: user.avatar,
+    }
+
+    post.comments.unshift(newComment)
+    await post.save()
+
+    res.status(201).json(post.comments)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server error')
+  }
+})
+
+// @route  DELETE api/posts/comment/:post_id/:comment_id
+// @desc   Delete a comment on a post
+// @access Private
+router('/comment/:post_id/:comment_id').delete(auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.post_id)
+    //Pull out comment
+    const comment = post.comments.find(
+      (com) => com.id === req.params.comment_id
+    )
+
+    //Ensure comment exists
+    if (!commment) {
+      return res.status(404).json({ msg: 'No comment found' })
+    }
+
+    //User is user that wrote comment
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' })
+    }
+
+    //Remove index
+    const removeIndex = post.comments
+      .map((comment) => comment.user.toString())
+      .indexOf(req.user.id)
+
+    post.comments.splice(removeIndex, 1)
+    await post.save()
+
+    res.status(204).json(post.comments)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server error')
+  }
+})
+
 module.exports = router
