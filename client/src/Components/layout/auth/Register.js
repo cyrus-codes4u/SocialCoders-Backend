@@ -1,4 +1,5 @@
-import React, { userState } from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const Register = () => {
   const [formState, setFormState] = useState({
@@ -11,12 +12,12 @@ const Register = () => {
   const updateForm = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value })
   }
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (formState.password !== formState.password2) {
       console.log('Passwords do not match')
     } else {
-      console.log(formState)
+      console.log('success')
     }
   }
 
