@@ -4,20 +4,25 @@ import Landing from './components/layout/Landing'
 import Register from './components/layout/auth/Register'
 import Login from './components/layout/auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+//Redux
+import store from './components/layout/store'
+import { Provider } from 'react-redux' // connects redux to react app
 
 function App() {
   return (
-    <Router className='App'>
-      <NavBar />
-      <Route exact path='/' component={Landing} />
+    <Provider store={store}>
+      <Router className='App'>
+        <NavBar />
+        <Route exact path='/' component={Landing} />
 
-      <section className='container'>
-        <Switch>
-          <Route exact path='/register' component={Register} />
-          <Route exact path='/login' component={Login} />
-        </Switch>
-      </section>
-    </Router>
+        <section className='container'>
+          <Switch>
+            <Route exact path='/register' component={Register} />
+            <Route exact path='/login' component={Login} />
+          </Switch>
+        </section>
+      </Router>
+    </Provider>
   )
 }
 
