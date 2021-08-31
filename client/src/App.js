@@ -1,8 +1,8 @@
 import './App.css'
 import NavBar from './components/layout/NavBar'
 import Landing from './components/layout/Landing'
-import Register from './components/layout/auth/Register'
-import Login from './components/layout/auth/Login'
+import Register from './components/auth/Register'
+import Login from './components/auth/Login'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 //Redux
 import store from './components/layout/store'
