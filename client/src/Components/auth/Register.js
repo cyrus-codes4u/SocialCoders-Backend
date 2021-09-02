@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setAlert } from '../actions/alert'
+import { register } from '../actions/auth'
 import PropTypes from 'prop-types'
 
-const Register = (props) => {
+const Register = ({ setAlert, register }) => {
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -12,16 +13,17 @@ const Register = (props) => {
     password2: '',
   })
 
+  const { name, email, password, password2 } = formState
   const updateForm = (e) => {
     setFormState({ ...formState, [e.target.name]: e.target.value })
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formState.password !== formState.password2) {
+    if (password !== password2) {
       //passes this message into Actions
-      props.setAlert('Passwords do not match', 'danger')
+      setAlert('Passwords do not match', 'danger')
     } else {
-      console.log('success')
+      register({ name, email, password })
     }
   }
 
@@ -39,7 +41,7 @@ const Register = (props) => {
             placeholder='Name'
             name='name'
             required
-            value={formState.name}
+            value={name}
             onChange={updateForm()}
           />
         </div>
@@ -48,7 +50,7 @@ const Register = (props) => {
             type='email'
             placeholder='Email Address'
             name='email'
-            value={formState.email}
+            value={email}
             onChange={updateForm()}
           />
           <small className='form-text'>
@@ -62,7 +64,7 @@ const Register = (props) => {
             placeholder='Password'
             name='password'
             minLength='6'
-            value={formState.password}
+            value={password}
             onChange={updateForm()}
           />
         </div>
@@ -72,7 +74,7 @@ const Register = (props) => {
             placeholder='Confirm Password'
             name='password2'
             minLength='6'
-            value={formState.password2}
+            value={password2}
             onChange={updateForm()}
           />
         </div>
@@ -88,6 +90,7 @@ const Register = (props) => {
 
 Register.PropTypes = {
   setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
 }
 
-export default connect(null, { setAlert })(Register)
+export default connect(null, { setAlert, register })(Register)
