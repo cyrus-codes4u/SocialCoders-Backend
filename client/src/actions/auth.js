@@ -1,6 +1,19 @@
 import axios from 'axios'
+import setAuthToken from '../utils/setAuthToken'
 import { setAlert } from './alert'
-import { REGISTER_FAIL, REGISTER_SUCCESS } from './types'
+import {
+  REGISTER_FAIL,
+  REGISTER_SUCCESS,
+  USER_LOADED,
+  AUTH_ERROR,
+} from './types'
+
+//LOAD user
+export const loadUser = () => async (dispatch) => {
+  if (localStorage.token) {
+    setAuthToken()
+  }
+}
 
 //Register User
 export const register =
