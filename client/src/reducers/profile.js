@@ -23,12 +23,13 @@ export default function (state = initialState, action) {
         ...state,
         error: payload,
       }
-    // case GET_PROFILE:
-    //   return {
-    //     ...state,
-    //     payload,
-    //     loading: false,
-    //   }
+    case CLEAR_PROFILE:
+      return {
+        ...state,
+        profile: null,
+        repos: [],
+        loading: false,
+      }
     default:
       return state
   }
