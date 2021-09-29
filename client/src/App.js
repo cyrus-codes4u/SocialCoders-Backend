@@ -14,6 +14,7 @@ import AddEducation from './components/profile-forms/AddEducation'
 import PrivateRoute from './components/routing/PrivateRoute'
 import Posts from './components/posts/Posts'
 import Post from './components/post/Post'
+import './App.css'
 //Redux
 import store from './components/layout/store'
 import { loadUser } from './actions/auth'
