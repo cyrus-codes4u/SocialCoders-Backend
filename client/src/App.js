@@ -14,13 +14,15 @@ import AddEducation from './components/profile-forms/AddEducation'
 import PrivateRoute from './components/routing/PrivateRoute'
 import Posts from './components/posts/Posts'
 import Post from './components/post/Post'
+import EditProfile from './components/profile-forms/EditProfile'
+import Profiles from './components/profiles/Profiles'
+import Profile from './components/profile/Profile'
 import './App.css'
 //Redux
 import store from './components/layout/store'
 import { loadUser } from './actions/auth'
 import { Provider } from 'react-redux' // connects redux to react app
 import setAuthToken from './utils/setAuthToken'
-import EditProfile from './components/profile-forms/EditProfile'
 
 if (localStorage.token) {
   setAuthToken(localStorage.token)
@@ -42,6 +44,8 @@ function App() {
           <Switch>
             <Route exact path='/register' component={Register} />
             <Route exact path='/login' component={Login} />
+            <Route exact path='/profiles' component={Profiles} />
+            <Route exact path='/profiles/:id' component={Profile} />
             <PrivateRoute exact path='/dasboard' component={Dashboard} />
             <PrivateRoute
               exact
