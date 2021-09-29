@@ -7,6 +7,7 @@ import ProfileAbout from './ProfileAbout'
 import { connect } from 'react-redux'
 import ProfileExperience from './ProfileExperience'
 import ProfileEducation from './ProfileEducation'
+import ProfileGitHub from './ProfileGithub'
 
 const Profile = ({
   auth,
@@ -67,6 +68,10 @@ const Profile = ({
                 <h4>No education credentials</h4>
               )}
             </div>
+
+            {profile.githubusername && (
+              <ProfileGitHub username={profile.githubusername} />
+            )}
           </div>
         </Fragment>
       )}
