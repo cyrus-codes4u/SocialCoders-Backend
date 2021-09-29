@@ -6,6 +6,7 @@ const config = require('config')
 const { check, validationResult } = require('express-validator/check')
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
+const Post = require('../../models/Post')
 
 // @route  GET api/profile/me
 // @desc   Get current users profile
@@ -35,7 +36,8 @@ router.get('/me', auth, async (req, res) => {
 // @route  POST api/profile
 // @desc   Create new profile for a user
 // @access Private
-router('/')
+router
+  .route('/')
   .post(
     [
       auth,
@@ -123,6 +125,7 @@ router('/')
   // @access Private
   .delete(auth, async (req, res) => {
     try {
+      await Post.deleteMany({ user: req.user.id })
       //Remove profile
       await Profile.findOneAndRemove({ user: req.user.id })
       // Remove User
@@ -138,7 +141,7 @@ router('/')
 // @route  GET api/profile/user/:user_id
 // @desc   Get profile by user id
 // @access Public
-router('/user/:user_id').get(async (req, res) => {
+router.route('/user/:user_id').get(async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id,
@@ -159,48 +162,50 @@ router('/user/:user_id').get(async (req, res) => {
 // @route  PUT api/profile/experience
 // @desc   Add profile experience
 // @access Private
-router('/experience').put(
-  [
-    auth,
+router
+  .route('/experience')
+  .put(
     [
-      check('company', 'Company is required').not().isEmpty(),
-      check('title', 'Title is required').not().isEmpty(),
-      check('from', 'From date is required').not().isEmpty(),
+      auth,
+      [
+        check('company', 'Company is required').not().isEmpty(),
+        check('title', 'Title is required').not().isEmpty(),
+        check('from', 'From date is required').not().isEmpty(),
+      ],
     ],
-  ],
-  async (req, res) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
-    }
-    const { from, to, company, title, location, description, current } =
-      req.body
+    async (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+      }
+      const { from, to, company, title, location, description, current } =
+        req.body
 
-    const newExperience = {
-      from,
-      to,
-      title,
-      company,
-      location,
-      description,
-      current,
+      const newExperience = {
+        from,
+        to,
+        title,
+        company,
+        location,
+        description,
+        current,
+      }
+      try {
+        const profile = Profile.findOne({ user: req.user.id })
+        profile.experience.unshift(newExperience)
+        await profile.save()
+        res.status(201).json(profile)
+      } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server error')
+      }
     }
-    try {
-      const profile = Profile.findOne({ user: req.user.id })
-      profile.experience.unshift(newExperience)
-      await profile.save()
-      res.status(201).json(profile)
-    } catch (err) {
-      console.error(err.message)
-      res.status(500).send('Server error')
-    }
-  }
-)
+  )
 
 // @route  DELETE api/profile/experience/:exp_id
 // @desc   Delete profile experience
 // @access Private
-router('/experience/:exp_id').delete(auth, async (req, res) => {
+router.route('/experience/:exp_id').delete(auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id })
 
@@ -222,49 +227,51 @@ router('/experience/:exp_id').delete(auth, async (req, res) => {
 // @route  PUT api/profile/education
 // @desc   Add profile education
 // @access Private
-router('/education').put(
-  [
-    auth,
+router
+  .route('/education')
+  .put(
     [
-      check('school').not().isEmpty(),
-      check('degree').not().isEmpty(),
-      check('from').not().isEmpty(),
-      check('fieldofstudy').not().isEmpty(),
+      auth,
+      [
+        check('school').not().isEmpty(),
+        check('degree').not().isEmpty(),
+        check('from').not().isEmpty(),
+        check('fieldofstudy').not().isEmpty(),
+      ],
     ],
-  ],
-  async (req, res) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
-    }
-    const { from, to, school, fieldofstudy, degree, description, current } =
-      req.body
+    async (req, res) => {
+      const errors = validationResult(req)
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+      }
+      const { from, to, school, fieldofstudy, degree, description, current } =
+        req.body
 
-    const newEducation = {
-      from,
-      to,
-      school,
-      fieldofstudy,
-      degree,
-      description,
-      current,
+      const newEducation = {
+        from,
+        to,
+        school,
+        fieldofstudy,
+        degree,
+        description,
+        current,
+      }
+      try {
+        const profile = Profile.findOne({ user: req.user.id })
+        profile.education.unshift(newEducation)
+        await profile.save()
+        res.status(201).json(profile)
+      } catch (err) {
+        console.error(err.message)
+        res.status(500).send('Server error')
+      }
     }
-    try {
-      const profile = Profile.findOne({ user: req.user.id })
-      profile.education.unshift(newEducation)
-      await profile.save()
-      res.status(201).json(profile)
-    } catch (err) {
-      console.error(err.message)
-      res.status(500).send('Server error')
-    }
-  }
-)
+  )
 
 // @route  DELETE api/profile/education/:edu_id
 // @desc   Delete profile experience
 // @access Private
-router('/education/:edu_id').delete(auth, async (req, res) => {
+router.route('/education/:edu_id').delete(auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id })
 
@@ -286,7 +293,7 @@ router('/education/:edu_id').delete(auth, async (req, res) => {
 // @route  GET api/profile/github/:username
 // @desc   Fetch github account information
 // @access Public
-router('/github/:username').get(async (req, res) => {
+router.route('/github/:username').get(async (req, res) => {
   try {
     const options = {
       uri: `https://api.github.com/users/${
